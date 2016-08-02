@@ -1,19 +1,21 @@
 {
   "name": "vue-deepstream-connector",
-  "version": "0.1.0",
+  "version": "0.0.0-semantically-released",
   "description": "vue.js deepstream connector for seamless integration",
   "main": "src/vdc.js",
   "directories": {
     "example": "example"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "commit": "git-cz",
+    "test": "mocha test/vdc.test.js -w",
     "build:umd": "webpack --output-filename vdc.js",
-    "build:min": "webpack --output-filename vdc.min.js -p"
+    "build:min": "webpack --output-filename vdc.min.js -p",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ecerroni/vue-deepstream-connector.git"
+    "url": "https://github.com/ecerroni/vue-deepstream-connector.git"
   },
   "keywords": [
     "vue.js",
@@ -39,8 +41,18 @@
     "babel-preset-es2015": "6.9.0",
     "babel-preset-stage-2": "6.11.0",
     "babel-register": "6.9.0",
+    "chai": "3.5.0",
+    "commitizen": "^2.8.2",
+    "cz-conventional-changelog": "^1.1.6",
     "json-loader": "0.5.4",
+    "mocha": "3.0.0",
+    "semantic-release": "^4.3.5",
     "webpack": "1.12.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-conventional-changelog"
+    }
   },
   "babel": {
     "presets": [
