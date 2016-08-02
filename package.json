@@ -9,6 +9,7 @@
   "scripts": {
     "commit": "git-cz",
     "test": "mocha test/vdc.test.js -w",
+    "test:single": "mocha test/vdc.test.js -w",
     "build:umd": "webpack --output-filename vdc.js",
     "build:min": "webpack --output-filename vdc.min.js -p",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
