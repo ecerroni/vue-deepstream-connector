@@ -9,7 +9,7 @@ A bridge connector between [Vue](http://vuejs.org) and [Deepstream](http://deeps
 The __vue-deepstream-connector__ allows to intercepts vue's array change detection methods to trigger deepstream's API. It combines them to offer a ___bidirectional data-sync___ option.
 
 ## Demo
-[link]
+![Vue-DeepStream-Connector Demo](example/assets/img/vdc.gif)
 
 ## Usage
 
