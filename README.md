@@ -6,73 +6,85 @@
 A bridge connector between [Vue](http://vuejs.org) and [Deepstream](http://deepstream.io).
 
 ## Get Started
-The __vue-deepstream-connector__ allows to intercepts vue array's change detection methods to trigger deepstream's API. It combines them to offer a bidirectional data-sync option.
+The __vue-deepstream-connector__ allows to intercepts vue's array change detection methods to trigger deepstream's API. It combines them to offer a ___bidirectional data-sync___ option.
+
+## Demo
+[link]
 
 ## Usage
 
 Sync usage:
-`
-sync: {
-    'some-key': function(){
+
+    sync: {
+      'some-key': function(){
         // It returns a deepstream source
-    }
-}
-`
+          }
+        }
 
 
 
 ### Browser
-`
-<script type="text/javascript" src="http://cdn.jsdelivr.net/vue/1.0.26/vue.min.jss"></script>
-<script type="text/javascript" src="assets/js/vdc.min.js"></script>
-`
+
+    <script type="text/javascript" src="http://cdn.jsdelivr.net/vue/1.0.26/vue.min.jss"></script>
+    <script type="text/javascript" src="assets/js/vdc.min.js"></script>
+
 
 _now the vue-deepstream-connector exposes the vdc object_
 
 Connect to the deepstream server
-`
-// define the connection params
-var srvObj = {
-  host: 'localhost',
-  port: '6020'
-}
-// connect to the server
-var vds = new vdc.vDs(srvObj)
-`
+
+    // define the connection params
+    var srvObj = {
+      host: 'localhost',
+      port: '6020'
+    }
+    // connect to the server
+    var vds = new vdc.vDs(srvObj)
+
 
 Sync a single deepstream record:
-`
-sync: {
+
+    sync: {
       object: function(){ // this, sync.key, recordName,
          return vdc.vueRecordFetch.call(this, 'object', 'welcome')
       }
-`
 
-Sync a whole array/list
-`
-sync: {
+
+Sync a whole array/list:
+
+    sync: {
       conversations: function(){ // this, {syncData, listName}
          return vdc.vueListFetch.call(this, {
                         syncData: 'conversations',
                         listName: 'chats'
                     })
       }
-`
 
-`
-`
 
-`
-`
+Sync v-model:
+Use the ds-sync filter
+
+    <textarea rows="4" cols="50" v-model="editable | ds-sync 'editable'"></textarea>
+
 
 
 ### Node
-`
-npm install deepstream.io@0.9.0 // install the server
-npm install vue-deepstream-connector // install both client@0.5.0 and the connector
-`
 
-### Example
+    npm install deepstream.io@0.9.0 // install the server
+    npm install vue-deepstream-connector // install both client@0.5.0 and the connector
+
+
+### Example (Browser)
+
+Same as the animated gif example
+
+    git clone https://github.com/ecerroni/vue-deepstream-connector.git
+    cd vue-deepstream-connector
+    npm install
+    cd example
+    node server
+    
+Open the browser at http://localhost:6020
 
 ## Caveats
 
@@ -80,6 +92,8 @@ So far the vue-deepstream-connector works with:
 - Deepstream server 0.9.0
 - Deepstream client 0.5.0
 - Vue 1.0.x
+
+__Compatibility with deepstream 1.0 and vue 2.0 is in the works__
 
 In order to make everything sync seamlessly a "_uid" property is added to every object inserted into the array
 This allows an optimistic UI where the new item triggers a View update on the client without waiting the response of the server
@@ -140,4 +154,5 @@ This allows an optimistic UI where the new item triggers a View update on the cl
 
 ## LICENSE
 ---
+
 MIT
