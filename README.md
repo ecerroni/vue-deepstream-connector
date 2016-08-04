@@ -121,7 +121,7 @@ This allows an optimistic UI where the new item triggers a View update on the cl
 - v-model ds-sync for number, select, checkbox and radio
 
 
-### TO DO: [VUE]
+### TO DO: [DS]
 - Create ds record (sugar syntax and auto "_uid")
 - Records
     -	All Events
@@ -147,6 +147,7 @@ This allows an optimistic UI where the new item triggers a View update on the cl
 ### PLANNED: [OTHER]
 - free underscore dependency
 - avoid the need to pass sync.key to the function call
+- production build with no console logs
 
 
 ## Thanks To
