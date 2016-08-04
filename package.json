@@ -1,6 +1,6 @@
 {
   "name": "vue-deepstream-connector",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "vue.js deepstream connector for seamless integration",
   "main": "src/vdc.js",
   "directories": {
