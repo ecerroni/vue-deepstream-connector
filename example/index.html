@@ -3,275 +3,218 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scalsudoe=1.0">
     <title>vue-deepstream-connector chat-example</title>
-   <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/chat.css">
-        <script 
-            type="text/javascript" 
-            src="assets/js/deepstream.js">
-        </script>
-        <script 
-            type="text/javascript" 
+    <script
+            type="text/javascript"
             src="assets/js/vue.js">
-        </script>
+    </script>
 
-<script 
+    <script src='https://cdn.rawgit.com/heatherbooker/vue-sticky-scroll/master/stickyScroll.js'></script>
+
+
+    <script
             type="text/javascript"
             src="assets/js/vdc.min.js">
-        </script>
-    </head>
+    </script>
+    <style>
+        .scroll-chat {
+            height: 350px;
+            width: 100%;
+            overflow: auto;
+            border: 0;
+            margin-top: 10px;
+            padding: 5px;
+        }
+    </style>
+</head>
 </head>
 <body>
 <script>
 
-</script>    
+</script>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 <div class="container" id="chat" v-cloak>
     <div class="col-md-12 col-lg-6" v-if="!auth"><h2>You must login first</h2><input type="text" v-model="login.user" @keyup.enter="addUser"><button @click="addUser">Login</button><p>Use either rico or mirko</p><h3>Demo demonstrating the vue-deepstream-connector</h3></div>
     <div class="col-md-12 col-lg-6" v-else>
         <div class="panel">
-        	<!--Heading-->
-    		<div class="panel-heading">
-    			<div class="panel-control">
-    				<div class="btn-group">
-    					<button class="btn btn-default" type="button" data-toggle="collapse" data-target="#demo-chat-body"><i class="fa fa-chevron-down"></i></button>
-    					<button type="button" class="btn btn-default" data-toggle="dropdown"><i class="fa fa-info-circle"></i></button>
-    					<ul class="dropdown-menu dropdown-menu-right">
-    						<li><a href="http://enricocerroni.com" target="_blank">Author: ric0</a></li>
-    						<li><a href="http://bootdey.com/snippets/view/messages-chat-widget" target="_blank">Download Chat Template </a></li>
-    						<li><a href="mailto:info@enricocerroni.com?subject=From Github vue-deepstream-connector">Contact</a></li>
-					<ul>
-    				</div>
-    			</div>
-    			<h3 class="panel-title" v-if=auth>Welcome {{login.user}}</h3>
-			<h3 class="panel-title" v-else>You Must Login</h3>
-    		</div>
-    
-    		<!--Widget body-->
-    		<div id="demo-chat-body" class="collapse in">
-    			<div class="nano has-scrollbar" style="height:400px" id="chatbox">
-    				<div class="nano-content pad-all" tabindex="0" style="right: -17px;" id="chatmessages">
+            <!--Heading-->
+            <div class="panel-heading">
+                <div class="panel-control">
+                    <div class="btn-group">
+                        <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#demo-chat-body"><i class="fa fa-chevron-down"></i></button>
+                        <button type="button" class="btn btn-default" data-toggle="dropdown"><i class="fa fa-info-circle"></i></button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li><a href="http://enricocerroni.com" target="_blank">Author: ric0</a></li>
+                            <li><a href="http://bootdey.com/snippets/view/messages-chat-widget" target="_blank">Download Chat Template </a></li>
+                            <li><a href="mailto:info@enricocerroni.com?subject=From Github vue-deepstream-connector">Contact</a></li>
+                            <ul>
+                    </div>
+                </div>
+                <h3 class="panel-title" v-if=auth>Welcome {{login.user}}</h3>
+                <h3 class="panel-title" v-else>You Must Login</h3>
+            </div>
 
-    					<ul class="list-unstyled media-block" v-if="empty">
-    						<li class="mar-btm">
-    							<div class="media-right">
-    								<img src="assets/img/luke_vader.jpg" class="img-circle img-sm" alt="Profile Picture">
-    							</div>
-    							<div class="media-body pad-hor speech-right">
-    								<div class="speech">
-    									<a href="#" class="media-heading">Luke Vader</a>
-    									<p>Sorry, no Messsages.... add Some. Use the Force!</p>
-    									<p class="speech-time">
-    										<i class="fa fa-clock-o fa-fw"></i>NOW
-    									</p>
-    								</div>
-    							</div>
-    						</li>
-</ul>
+            <!--Widget body-->
+            <div id="demo-chat-body" class="collapse in">
+                <div class="nano has-scrollbar" style="height:400px" id="chatbox">
+                    <div class="nano-content pad-all" tabindex="0" style="right: -17px;" id="chatmessages">
 
-    					<ul class="list-unstyled media-block" v-for="conversation in conversations">
-    						<li class="mar-btm" v-if="login.user == conversation.user">
-    							<div class="media-right">
+                        <ul class="list-unstyled media-block" v-if="empty">
+                            <li class="mar-btm">
+                                <div class="media-right">
+                                    <img src="assets/img/luke_vader.jpg" class="img-circle img-sm" alt="Profile Picture">
+                                </div>
+                                <div class="media-body pad-hor speech-right">
+                                    <div class="speech">
+                                        <a href="#" class="media-heading">Luke Vader</a>
+                                        <p>Sorry, no Messsages.... add Some. Use the Force!</p>
+                                        <p class="speech-time">
+                                            <i class="fa fa-clock-o fa-fw"></i>NOW
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+
+                        <div class='scroll-chat' v-sticky-scroll:animate="500">
+                        <ul class="list-unstyled media-block" v-for="conversation in conversations">
+                            <li class="mar-btm" v-if="login.user == conversation.user">
+                                <div class="media-right">
                                     <img v-if="conversation.user == 'rico'" src="assets/img/rico.png" class="img-circle img-sm" alt="Profile Picture">
                                     <img v-if="conversation.user == 'mirko'" src="assets/img/mirko.png" class="img-circle img-sm" alt="Profile Picture">
-    							</div>
-    							<div class="media-body pad-hor speech-right">
-    								<div class="speech">
-    									<a href="#" class="media-heading">{{conversation.user}}</a>
-    									<p>{{conversation.text}}</p>
-    									<p class="speech-time">
-    										<i class="fa fa-clock-o fa-fw"></i>{{conversation.time | moment}}
-    									</p><p class="speech-time">
-    										<i class="fa fa-close fa-fw" @click="removeConversation(conversation)"></i>
-    									</p>
-    								</div>
-    							</div>
-    						</li>
-    						<li class="mar-btm" v-if="login.user != conversation.user">
-    							<div class="media-left">
-    								<img v-if="conversation.user == 'rico'" src="assets/img/rico.png" class="img-circle img-sm" alt="Profile Picture">
+                                </div>
+                                <div class="media-body pad-hor speech-right">
+                                    <div class="speech">
+                                        <a href="#" class="media-heading">{{conversation.user}}</a>
+                                        <p>{{conversation.text}}</p>
+                                        <p class="speech-time">
+                                            <i class="fa fa-clock-o fa-fw"></i>{{conversation.time | moment}}
+                                        </p><p class="speech-time">
+                                        <i class="fa fa-close fa-fw" @click="removeConversation(conversation)"></i>
+                                    </p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="mar-btm" v-if="login.user != conversation.user">
+                                <div class="media-left">
+                                    <img v-if="conversation.user == 'rico'" src="assets/img/rico.png" class="img-circle img-sm" alt="Profile Picture">
                                     <img v-if="conversation.user == 'mirko'" src="assets/img/mirko.png" class="img-circle img-sm" alt="Profile Picture">
-    							</div>
-    							<div class="media-body pad-hor">
-    								<div class="speech">
-    									<a href="#" class="media-heading">{{conversation.user}}</a>
-    									<p>{{conversation.text}}</p>
-    									<p>
-    										<i class="fa fa-clock-o fa-fw"></i>{{conversation.time | moment}}
-    									</p><p>
-    										<i class="fa fa-close fa-fw" @click="removeConversation(conversation)"></i>
-    									</p>
-    								</div>
-    							</div>
-    						</li>
-    					</ul>
-    				</div>
-    			<div class="nano-pane"><div class="nano-slider" style="height: 141px; transform: translate(0px, 0px);"></div></div></div>
-    
-    			<!--Widget footer-->
-    			<div class="panel-footer">
-    				<div class="row">
-    					<div class="col-xs-9">
-    						<input type="text" placeholder="Enter your text" v-model=conversation class="form-control chat-input" @keyup.enter='addConversation'>
-    					</div>
-    					<div class="col-xs-3">
-    						<button class="btn btn-primary btn-block" type="submit" @click='addConversation'>Send</button>
-    					</div>
-    				</div>
-    			</div>
-    		</div>
-    	</div>
-    </div>
-<div class="container" v-if='auth'>
-         <div class="row">
-            <div class="col-xs-10"><br /><br /><p><b>SHARED PAD</b></p><textarea rows="4" cols="50" v-model="editable | ds-sync 'editable'"></textarea></div></div>
+                                </div>
+                                <div class="media-body pad-hor">
+                                    <div class="speech">
+                                        <a href="#" class="media-heading">{{conversation.user}}</a>
+                                        <p>{{conversation.text}}</p>
+                                        <p>
+                                            <i class="fa fa-clock-o fa-fw"></i>{{conversation.time | moment}}
+                                        </p><p>
+                                        <i class="fa fa-close fa-fw" @click="removeConversation(conversation)"></i>
+                                    </p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul></div>
+                    </div>
+                    <div class="nano-pane"><div class="nano-slider" style="height: 141px; transform: translate(0px, 0px);"></div></div></div>
+
+                <!--Widget footer-->
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-xs-9">
+                            <input type="text" placeholder="Enter your text" v-model=conversation class="form-control chat-input" @keyup.enter='addConversation'>
+                        </div>
+                        <div class="col-xs-3">
+                            <button class="btn btn-primary btn-block" type="submit" @click='addConversation'>Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    <div class="container" v-if='auth'>
+        <div class="row">
+            <div class="col-xs-10"><br /><br /><p><b>SHARED PAD</b></p><textarea rows="4" cols="50" v-model="editable | ds-sync 'editable'"></textarea></div></div>
+    </div>
+</div>
 </div>
 <script type="text/javascript">
 
-// define the connection params
-var srvObj = {
-  host: 'localhost',
-  port: '6020',
-  path: '/deepstream'
-}
-// connect to the server
-var vds = new vdc.vDs(srvObj)
 
-//Pre setting the welcome message in the share pad
-var wlc=null;
-var welcome = ds.record.getRecord('welcome')
-welcome.set({user: 'none', text: 'Welcomee!', extra: 'extra'});
-welcome.whenReady(function(){
-  if (wlc!=null) {
-      wlc.splice(0, 1, welcome.get())
-      } else {
-               wlc = []; wlc.push(welcome.get());
-                };
-})
+    // Use the connector
+    Vue.use(VueDeepstramConnector)
 
 
-//Vue instance
-var chat = new Vue({
-    el: '#chat',
-    events: {
-        'test': function (e, value) {
-          console.log('test ', e, value)
-        }
-    },
-    ready: function(){
-    this.$watch('conversations', function (value, mutation) {
-        if (mutation) {
-            this.$emit('scroll')
+    //Vue instance
+    var chat = new Vue({
+        ds: {connectionUrl: 'localhost:6020',
+            options: {
+                //deepstream client connection options
+                //find them here: https://deepstream.io/docs/client-js/options/
+            }},
+        el: '#chat',
+        data:{
+            auth: false,
+            message: '',
+            conversation: '',
+            login: {
+                user:'',
+                password:''
+            }
+        },
+        // data keys for the vue-deepstream-connector
+        sync: {
+            conversations: function(){
+                return this.$dsListFetch('chats')
+            },
+            editable: function(){
+                return this.$dsRecordFieldFetch('welcome', 'text')
+            }
+        },
+        computed:
+        {
+            empty: function(){
+                var bool = this.conversations.length>0 ? false : true
+                return bool
+            }
+
+        },
+        methods:{
+            addConversation: function(){
+                this.conversations.push({user: this.login.user, text: this.conversation, time: new Date()})
+                this.conversation = '';
+
+            },
+            removeConversation: function(conversation){
+                this.conversations.$remove(conversation)
+            },
+            addUser: function(){
+                this.$dsRecordCreate('welcome', {text: 'Welcome!'}, false)
+                var self = this
+                this.$dsLogin({username: self.login.user, password: ''}, function(status, data){
+                    if( status === true ) {
+                        self.auth = true;
+                        console.log( 'Application Started', data );
+                    }
+                    else {
+                        self.login.user = 'Your username'
+                        console.log( 'Login failed: ' + data );
+                    }
+                })
+            }
+        },
+        filters: {
+            moment: function (date) {
+                return moment(date).format("HH:mm");
+            }
         }
     })
-    }
-    ,
-    data:{
-      auth: false,
-      message: '',
-      conversation: '',
-      users: [],
-      login: {
-          user:'',
-          password:'test',
-          group:'partners'
-      }
-      //empty: 0
-    },
-    // data keys for the vue-deepstream-connector
-    sync: {
-      object: function(){ // this, sync.data, recordName,
-         return vdc.vueRecordFetch.call(this, 'object', 'welcome')
-      },
-      conversations: function(){ // this, sync.data listname, listName,
-         return vdc.vueListFetch.call(this, {
-                        syncData: 'conversations',
-                        listName: 'chats'
-                    })
-      },
-     editable: function(){
-         return vdc.vueRecordFieldFetch.call(this, 'editable', 'welcome', 'text')
-      },
-     singleField: function(){
-      return vdc.vueRecordFieldFetch.call(this, 'singleField', 'welcome', 'user')
-    }
-    },
-    computed:
-    {
-      empty: function(){
-         var bool = this.conversations.length>0 ? false : true
-         return bool
-      }
-
-    },
-    events: {
-      'scroll': function (value){
-          var out = document.getElementById("chatmessages");
-          setTimeout(function(){
-              var isScrolledToBottom = out.scrollHeight - out.clientHeight <= (out.scrollTop + 200);
-              if(isScrolledToBottom)
-                  out.scrollTop = out.scrollHeight - out.clientHeight;}, 500)
-      }
-    },
-    methods:{
-        addConversation: function(){
-          this.conversations.push({user: this.login.user, text: this.conversation, time: new Date()})
-          this.$emit('scroll', this.conversation)
-          this.conversation = '';
-
-        },
-        removeConversation: function(conversation){
-            this.conversations.$remove(conversation)
-            console.log('this ', conversation)
-        },
-        addUser: function(){
-            login()
-        }
-    },
-    filters: {
-        moment: function (date) {
-            return moment(date).format("HH:mm");
-        }
-    }
-})
-
-
-
-function login() {
-console.log('Login attempt')
-vds.login({
-        user:chat.login.user,
-        password:chat.login.password,
-	group:chat.login.group
-    }, function(success, errorCode, data){
-             //console.log('error: ', errorCode, success, data)
-                if( success ) {
-		    chat.auth = true;
-                    console.log( 'Application Started', data );
-                }
-                else {
-                    chat.login.user = 'Your username'
-                    console.log( 'Login failed: ' + data );
-                }
-            }
-    );
-}
-
-login()
-
-
-   ds.on( 'error', function( msg, event, topic ){
-        console.log( 'MESSAGE: '+msg+' | EVENT: ' +event+' | '+ 'TOPIC: '+topic );
-    });
-
 
 </script>
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
-    <script src="assets/js/moment.js"></script>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+<script src="assets/js/moment.js"></script>
 <script>
 </script>
 </body>

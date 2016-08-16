@@ -1,0 +1,24 @@
+{
+  "name": "vue-deepstream-connector-example",
+  "version": "0.1.0",
+  "description": "vue.js deepstream connector example",
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ecerroni/vue-deepstream-connector.git"
+  },
+  "keywords": [
+    "vue.js",
+    "deepstream.io"
+  ],
+  "author": "ric0",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ecerroni/vue-deepstream-connector/issues"
+  },
+  "homepage": "https://github.com/ecerroni/vue-deepstream-connector#readme",
+  "dependencies": {
+    "deepstream.io": "1.0.3",
+    "express": "4.14.0"
+  }
+}

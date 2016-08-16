@@ -45,8 +45,8 @@ exports.install = function (Vue, options){
         _.extend(option.data, sync);
 
         option.init = option.init
-            ? [dsInit].concat(option.init)
-            : dsInit
+            ? [initDs].concat(option.init)
+            : initDs
 
         // Default init
         this.__init(option);
@@ -80,18 +80,9 @@ exports.install = function (Vue, options){
     };
 
     Vue.config.optionMergeStrategies.sync = Vue.config.optionMergeStrategies.computed
+
     p.$dsListFetch = builtInDeepstream['vueListFetch']
     p.$dsConnect = builtInDeepstream['vDs']
-    /*Vue.options = Vue.util.mergeOptions(Vue.options, {
-        created: function () {
-            if (this.$options.ds) {
-                p.$dsConnect// initialize stuff based on myOption...
-            }
-        }
-    })*/
-    /*p.$dsLogin = builtInDeepstream['vdsLogin'](function(result){
-        return result
-    })*/
     p.$dsLogin = builtInDeepstream['vdsLogin']
     p.$dsLogout = builtInDeepstream['vdsLogout']
     p.$dsRecordFieldFetch = builtInDeepstream['vueRecordFieldFetch']
@@ -107,38 +98,14 @@ exports.install = function (Vue, options){
         }
     })
 
-    function dsInit () {
+    function initDs () {
 
-        // deepstream injection
+        // init deepstream
         if ((this.$options.ds) && (this.$root == this)) {
             this.$ds = p.$dsConnect(this.$options.ds).login()
-            //this.$ds.login();
-            //console.log('this ds', this.$ds)
-        //} else if (options.parent && options.parent.$ds) {
         } else if (this.$root.$ds) {
             this.$ds = this.$root.$ds
-            //console.log('this parent ds', this.$root.$ds)
-        }
-
-//        if (ds) {
-    //        if (!this.$ds) {
-      //          warn('deepstream not injected. Make sure to provide deepstream option in yout root component.')
-      //      }
-  //      }
-    }
-
-    /*Vue.mixin({
-        created: function () {
-            var ds = this.$options.ds
-            if (ds) {
-                this.$dsConnect(ds)
             }
-        }
-    })*/
 
- /*   // auto install
-    if (typeof window !== 'undefined' && window.Vue) {
-        window.Vue.use(VueDeepstreamConnector)
     }
-    */
 }

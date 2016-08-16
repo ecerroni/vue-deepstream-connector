@@ -13,6 +13,10 @@ The __vue-deepstream-connector__ allows to intercepts vue's array change detecti
 
 ## Usage
 
+Load the library (either for browser and Node):
+
+    Vue.use(VueDeepStreamConnector)
+
 Sync usage:
 
     sync: {
@@ -29,36 +33,44 @@ Sync usage:
     <script type="text/javascript" src="assets/js/vdc.min.js"></script>
 
 
-_now the vue-deepstream-connector exposes the vdc object_
+Connect to the deepstream server. Use a custom option named 'ds' always in the root component
 
-Connect to the deepstream server
+    var demo = new Vue({
+            ds: {connectionUrl: 'localhost:6020',
+                options: {
+                    //deepstream client connection options
+                    //find them here: https://deepstream.io/docs/client-js/options/
+                    }
+                }, // You may omit the option object completely
+            el: '#demo',
+            data: {
+                // Your data here
+            }
+       })
 
-    // define the connection params
-    var srvObj = {
-      host: 'localhost',
-      port: '6020'
+Login to the deepstream server
+
+    this.$dsLogin({username: 'uid', password: 'pwd'}, function(logged, data){
+            // logged is either false or true
+      })
     }
-    // connect to the server
-    var vds = new vdc.vDs(srvObj)
 
 
 Sync a single deepstream record:
 
     sync: {
-      object: function(){ // this, sync.key, recordName,
-         return vdc.vueRecordFetch.call(this, 'object', 'welcome')
+      object: function(){ // params: recordName
+         return this.$dsRecordFetch.call('welcome')
       }
 
 
 Sync a whole array/list:
 
     sync: {
-      conversations: function(){ // this, {syncData, listName}
-         return vdc.vueListFetch.call(this, {
-                        syncData: 'conversations',
-                        listName: 'chats'
-                    })
-      }
+      conversations: function(){ // params: listName
+         return this.$dsListFetch('chats')
+      } // to insert items in the list use this.conversations.push(object)
+        // to remove items from the list use this.conversations.$remove(object)
 
 
 Sync v-model:
@@ -66,12 +78,18 @@ Use the ds-sync filter
 
     <textarea rows="4" cols="50" v-model="editable | ds-sync 'editable'"></textarea>
 
+Retrieve the exact field:
+    sync: {
+          editable: function(){ // params: recordName, fieldName
+             return this.$dsRecordFieldFetch('myRecord', 'myField')
+          }
+          // using the ds-sync filter will update real-time all the connected clients
 
 
 ### Node
 
-    npm install deepstream.io@0.9.0 // install the server
-    npm install vue-deepstream-connector // install both client@0.5.0 and the connector
+    npm install deepstream.io // install the server
+    npm install vue-deepstream-connector // install both client@1.x.x and the connector
 
 
 ### Example (Browser)
@@ -80,24 +98,36 @@ Same as the animated gif example
 
     git clone https://github.com/ecerroni/vue-deepstream-connector.git
     cd vue-deepstream-connector
-    npm install
     cd example
+    npm install
     node server
     
 Open the browser at http://localhost:6020
 
+## All Methods
+
+this.$dsLogin // return a callback with the login result status
+this.$dsLogout // logouts the user closing the connection. You may now login with another user
+this.$dsRecordFieldFetch // reactive deepstream source: a specific record's field
+this.$dsListFetch // reactive deepstream source: a list that can be populate with Vue's array mutation functions
+this.$dsRecordCreate // create a record with or without a unique id
+this.$dsConnect //use the 'ds' customOption instead, see above
+
 ## Caveats
 
 So far the vue-deepstream-connector works with:
-- Deepstream server 0.9.0
-- Deepstream client 0.5.0
+- Deepstream server 1.0.x
+- Deepstream client 1.0.x
 - Vue 1.0.x
 
-__Compatibility with deepstream 1.0 and vue 2.0 is in the works__
+__Compatibility with vue 2.0 is in the works__
 
 In order to make everything sync seamlessly a "_uid" property is added to every object inserted into the array
 This allows an optimistic UI where the new item triggers a View update on the client without waiting the response of the server
 
+### Dynamic components
+The connector works well with dynamic components as long as you're working with props.
+If a child component use a method to fetch anything from deepstream you must use the keep-alive param (either in vue-router or is:currentView) to preserve its state and avoid re-rendering
 -----
 
 ## VUE-DEEPSTREAM INTEGRATION STATUS
@@ -125,33 +155,34 @@ This allows an optimistic UI where the new item triggers a View update on the cl
 - Create ds record (sugar syntax and auto "_uid")
 - Records
     -	All Events
-    -	unsubscribe (subscribe is already implemented as you automatically subscribe to changes when getting a record or a field)
+    -	unsubscribe
     -	discard
     -	delete
 - Lists
     -  	All Events
-    -	unsubscribe (subscribe is already implemented as you automatically subscribe to changes when getting a List. Subscriptions are made on list and single record as well)
+    -	unsubscribe
     -  	discard
     -	delete
 
 ### PLANNED: [DS]
--	ServerOptions
+-	~~ServerOptions~~
 - 	Connection States
--	Login
--	Auth & Permissions
--	Client Record
+-	~~Login~~ DONE
+-	~~Auth & Permissions~~ DONE
 -	Anonymous Record
 -	RPC
 -	ERRORS
 
 ### PLANNED: [OTHER]
 - free underscore dependency
-- avoid the need to pass sync.key to the function call
+- ~~avoid the need to pass sync.key to the function call~~ DONE
 - production build with no console logs
 
 
 ## Thanks To
-- [Zhou's Meteor-Vue](https://github.com/zhouzhuojie/meteor-vue)
+- [Zhou's meteor-vue](https://github.com/zhouzhuojie/meteor-vue)
+- [PeakTai's vue-verify](https://github.com/PeakTai/vue-verify)
+
 
 ## LICENSE
 ---
