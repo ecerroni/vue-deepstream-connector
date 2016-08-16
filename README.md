@@ -60,7 +60,7 @@ Sync a single deepstream record:
 
     sync: {
       object: function(){ // params: recordName
-         return this.$dsRecordFetch.call('welcome')
+         return this.$dsRecordFetch('welcome')
       }
 
 
