@@ -4,6 +4,7 @@ var dsMethods = require('./process-method')
 /**
  *
  * A good chunk is based on Zhuojie Zhou's awesome meteor-vue package @ https://github.com/zhouzhuojie/meteor-vue/blob/master/lib/main.js
+ * Also re-used some code from the vue-verify package
  */
 
 exports.install = function (Vue, options){
