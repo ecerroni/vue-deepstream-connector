@@ -79,6 +79,7 @@ Use the ds-sync filter
     <textarea rows="4" cols="50" v-model="editable | ds-sync 'editable'"></textarea>
 
 Retrieve the exact field:
+
     sync: {
           editable: function(){ // params: recordName, fieldName
              return this.$dsRecordFieldFetch('myRecord', 'myField')
@@ -127,7 +128,9 @@ This allows an optimistic UI where the new item triggers a View update on the cl
 
 ### Dynamic components
 The connector works well with dynamic components as long as you're working with props.
-If a child component use a method to fetch anything from deepstream you must use the keep-alive param (either in vue-router or is:currentView) to preserve its state and avoid re-rendering
+
+__If a child component use a method to fetch anything from deepstream you must use the keep-alive param (either in vue-router or is:currentView) to preserve its state and avoid re-rendering__
+
 -----
 
 ## VUE-DEEPSTREAM INTEGRATION STATUS
@@ -165,7 +168,7 @@ If a child component use a method to fetch anything from deepstream you must use
     -	delete
 
 ### PLANNED: [DS]
--	~~ServerOptions~~
+-	~~ServerOptions~~ DONE
 - 	Connection States
 -	~~Login~~ DONE
 -	~~Auth & Permissions~~ DONE
