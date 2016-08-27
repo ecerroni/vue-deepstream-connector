@@ -71,7 +71,7 @@ Sync a whole array/list:
          return this.$dsListFetch('chats')
       } // to insert items in the list use this.conversations.push(object)
         // to remove items from the list use this.conversations.$remove(object)
-
+        // for read only lists use: return this.$dsListFetchReadOnly(listName)
 
 Sync v-model:
 Use the ds-sync filter
@@ -107,12 +107,13 @@ Open the browser at http://localhost:6020
 
 ## All Methods
 
-this.$dsLogin // return a callback with the login result status
-this.$dsLogout // logouts the user closing the connection. You may now login with another user
-this.$dsRecordFieldFetch // reactive deepstream source: a specific record's field
-this.$dsListFetch // reactive deepstream source: a list that can be populate with Vue's array mutation functions
-this.$dsRecordCreate // create a record with or without a unique id
-this.$dsConnect //use the 'ds' customOption instead, see above
+- __this.$dsLogin__ // return a callback with the login result status
+- __this.$dsLogout__ // logouts the user closing the connection. You may now login with another user
+- __this.$dsRecordFieldFetch__ // reactive deepstream source: a specific record's field
+- __this.$dsListFetch__ // reactive deepstream source: a list that can be populate with Vue's array mutation functions
+- __this.$dsRecordCreate__ // create a record with or without a unique id
+- __this.$dsConnect__ //use the 'ds' customOption instead, see above
+- __this.$dsListFetchReadOnly__ // reactive deepstream source: a list that can be only read but not mutated (mutation stays only locally until next browser refresh)
 
 ## Caveats
 
@@ -179,7 +180,7 @@ __If a child component use a method to fetch anything from deepstream you must u
 ### PLANNED: [OTHER]
 - free underscore dependency
 - ~~avoid the need to pass sync.key to the function call~~ DONE
-- production build with no console logs
+- ~~repo files with no console logs~~ DONE
 
 
 ## Thanks To
