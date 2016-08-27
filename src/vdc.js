@@ -83,11 +83,13 @@ exports.install = function (Vue, options){
     Vue.config.optionMergeStrategies.sync = Vue.config.optionMergeStrategies.computed
 
     p.$dsListFetch = builtInDeepstream['vueListFetch']
+    p.$dsListFetchReadOnly = builtInDeepstream['vueListFetchReadOnly']
     p.$dsConnect = builtInDeepstream['vDs']
     p.$dsLogin = builtInDeepstream['vdsLogin']
     p.$dsLogout = builtInDeepstream['vdsLogout']
     p.$dsRecordFieldFetch = builtInDeepstream['vueRecordFieldFetch']
     p.$dsRecordCreate = builtInDeepstream['vueRecordCreate']
+    p.$dsRecordFetch = builtInDeepstream['vueRecordFetch']
 
     Vue.filter('ds-sync', {
         read: function(value, key) {

@@ -33,7 +33,7 @@ function processMethod(methods) {
         var value = methods[key]
         var method = process(value)
         if (!method) {
-            console.log("can not accept method \"" + key + "\"", value)
+            0
             throw "can not accept method \"" + key + "\""
         } else {
             result[key] = method

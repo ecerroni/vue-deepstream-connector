@@ -12,7 +12,6 @@ function vDs(params){
     var ds = deepstream(params.connectionUrl, params.options);
     ds.on('connectionStateChanged', function(connectionState) {
         // will be called with 'CLOSED' once the connection is successfully closed.
-        //console.log('connectionStateChanged', connectionState)
     })
     return ds
 }
@@ -70,27 +69,91 @@ function _arrayObjectIndexOf(myArray, property, searchTerm) {
  */
 function _vdsList(list, ds) {
   var subscribedList = ds.record.getList(list);
-    var listArr = []
-  //console.log('I have subscribed you to the >> '+ list + ' List')
   gloList.push({listName: list, listData: subscribedList});
 
-  console.log('# OF LIST SUBSCRIBED TO ', gloList.length, gloList.map(function(ln){return ln.listName}))
+  0
 
-    //console.log('List Names: ', gloList.map(function(ln){return ln.listName}))
   return _arrayObjectIndexOf(gloList, 'listName', list);
 }
 
 function vueListDiscard (listName) {
     var ds = this.$ds
-    //var listToFetch = params.listName;
-    //var key = params.syncData
+
     var list = ds.record.getList(listName);
-    console.log('ready to get rid of ', listName, list)
-    /*list.unsubscribe(function(){
-        console.log('unsubscribed from ', listName)
-    })*/
+    0
+
     list.discard()
 
+}
+
+
+function vueListFetchReadOnly (listName) {
+
+    var ds = this.$ds
+    var listToFetch = listName;
+    var key = this._callingKey
+    var list = gloList[_vdsList(listToFetch, ds)].listData;
+    var self = this // This is Vue sync caller
+    var data = [];
+
+    var k = key
+
+    list.whenReady(function onListReady() {
+        list.getEntries().forEach(function (entry, itemIdx) {
+            var item = ds.record.getRecord(entry);
+            item.subscribe(function (data) {
+                0
+                var keyExists = Object.keys(self.$$syncDict).indexOf(k) > -1 ? Object.keys(self.$$syncDict).indexOf(k) : -1;
+                var update = null;
+
+                if (keyExists > -1) {
+                    var idx = -1
+                    update = self.$data[k].find(function (item, index) {
+                        idx = index
+
+                        return idx == itemIdx
+                    })
+
+                    if (update) {
+                        0
+                        self.$data[k].$set(idx, data)
+                    }
+                }
+            })// end item.subscribe
+
+            item.whenReady(function () {
+                data.safePush(item.get())
+            })
+        })
+        0
+    })
+
+
+    data._list = listToFetch
+    data._key = key
+    var self = this
+
+    data.safePush = function (arr) {
+        return this.__proto__.push.apply(this, arguments);
+    }
+
+    data.$safeSet = function (idx, toUpdate) {
+        0
+        if (idx >= data.length) {
+            data.length = Number(idx) + 1
+        }
+
+        data.splice(idx, 1, toUpdate)[0]
+        0
+    }//end data.$set
+
+    data.$remove = function (toUpdate) {
+        0
+        gloList[_arrayObjectIndexOf(gloList, 'listName', data._list)].listData.removeEntry(toUpdate)
+        return this.__proto__.$remove.apply(this, arguments);
+    }//end data.$set
+
+    return data
 }
 
 /**
@@ -109,14 +172,12 @@ function vueListFetch (listName) {
 
     var k = key
 
-       // console.log('connectivity ', ds.getConnectionState())
 
-    // this.$on('beforeDestroy', function(){console.log('now destroy the list')})
     list.whenReady(function onListReady() {
         list.getEntries().forEach(function (entry, index) {
             var item = ds.record.getRecord(entry);
             item.subscribe(function (data) {
-                console.log('[DS] EVENT: {SUBSCRIBE} ITEM [', data._uid, ']')
+                0
                 var keyExists = Object.keys(self.$$syncDict).indexOf(k) > -1 ? Object.keys(self.$$syncDict).indexOf(k) : -1;
                 var update = null;
 
@@ -128,7 +189,7 @@ function vueListFetch (listName) {
                     })
 
                     if (update) {
-                        console.log('[DS] FROM {SUBSCRIBE} HAVE ITEM [', update._uid, '] TO INSERT @ ', idx)
+                        0
                         self.$data[k].$set(idx, data)
                     }
                 }
@@ -138,13 +199,13 @@ function vueListFetch (listName) {
                 data.safePush(item.get())
             })
         })
-        console.log('[DS] FETCH LIST ENTRIES FOR /'+listName+'/: ', list.getEntries())
+        0
     })
 
     list.on('entry-added', function (recordChanged) {
         var item = ds.record.getRecord(recordChanged)
         item.subscribe(function (data) {
-            console.log('[DS] EVENT: {SUBSCRIBE} ITEM (LIST) [', data._uid, ']')
+            0
             var keyExists = Object.keys(self.$$syncDict).indexOf(k) > -1 ? Object.keys(self.$$syncDict).indexOf(k) : -1;
             var update = null;
             if (keyExists > -1) {
@@ -155,7 +216,7 @@ function vueListFetch (listName) {
                 })
 
                 if (update) {
-                    console.log('[DS] FROM {SUBSCRIBE} FOUND ITEM [', update._uid, '] TO UPDATE @ ', idx)
+                    0
                     self.$data[k].$set(idx, data)
                 }
             }
@@ -173,7 +234,7 @@ function vueListFetch (listName) {
             })
 
             if (!update) self.$data[k].$safeSet(self.$data[k].length, obj)
-            console.log('[DS] EVENT: {ENTRY-ADDED} (LIST) | ITEM[', obj._uid, ']')
+            0
         })
     }) // end list.on.entryAdded
 
@@ -184,7 +245,7 @@ function vueListFetch (listName) {
                 return item._uid == recordChanged;
             })
             remove ? self.$data[k].$remove(remove) : null;
-            if (remove) console.log('[DS] EVENT: {ENTRY-REMOVED} (LIST) | ITEM[', recordChanged, ']')
+            if (remove) 0
         }
     })// end list.on.entryRemoved
 
@@ -193,7 +254,7 @@ function vueListFetch (listName) {
     var self = this
     data.push = function (arr) {
         var pushMessage = '[CONNECTOR] Push intercepted | Checking... [ FRESH UID ]'
-        console.log(pushMessage)
+        0
         var uid = ds.getUid();
         var record = data._key + '/' + uid;
         var timestamp = Date.now()
@@ -217,7 +278,7 @@ function vueListFetch (listName) {
             gloList[_arrayObjectIndexOf(gloList, 'listName', data._list)].listData.addEntry(record)
         }
 
-        console.log('[CONNECTOR] Pushed! Complete', [data._list, record, newEntry])
+        0
         return this.__proto__.push.apply(this, arguments);
     }//end data.push
 
@@ -226,13 +287,13 @@ function vueListFetch (listName) {
     }
 
     data.$set = function (idx, toUpdate) {
-        console.log('[CONNECTOR] $set intercepted | Checking... [', toUpdate._uid, '] @', idx)
+        0
         if (idx >= data.length) {
             data.length = Number(idx) + 1
         }
 
         data.splice(idx, 1, toUpdate)[0]
-        console.log('[CONNECTOR] $set complete | Commit... [', toUpdate._uid, ']')
+        0
 
         var updateRecord = ds.record.getRecord(toUpdate._uid)
         updateRecord.whenReady(function () {
@@ -241,17 +302,17 @@ function vueListFetch (listName) {
     }//end data.$set
 
     data.$safeSet = function (idx, toUpdate) {
-        console.log('[CONNECTOR] $safeSet intercepted | Checking... [', toUpdate._uid, '] @', idx)
+        0
         if (idx >= data.length) {
             data.length = Number(idx) + 1
         }
 
         data.splice(idx, 1, toUpdate)[0]
-        console.log('[CONNECTOR] $safeSet complete | Commit... [', toUpdate._uid, ']')
+        0
     }//end data.$set
 
     data.$remove = function (toUpdate) {
-        console.log('[CONNECTOR] $remove intercepted | Deleting... [', toUpdate._uid, '] ')
+        0
         gloList[_arrayObjectIndexOf(gloList, 'listName', data._list)].listData.removeEntry(toUpdate._uid)
         return this.__proto__.$remove.apply(this, arguments);
     }//end data.$set
@@ -310,13 +371,14 @@ function vueRecordCreate(recordName, defVal, genId) {
             }
 
             entry.set(objData);
-            //console.log('inner entry ', entry, record, recordName)
+
             return entry
         } else {
-            console.log('Either something went wrong during "create" or object data are missing')
+            0
         }
 
     })
+    return record
 }
 
 /**
@@ -331,14 +393,14 @@ function vueRecordFetch(record) {
     var item = ds.record.getRecord(record);
 
     item.subscribe(function(value){
-        console.log('[DS] EVENT: {SUBSCRIBE} ITEM (SINGLE ITEM) ', value)
+        0
 
         var keyExists = Object.keys(self.$$syncDict).indexOf(k) > -1 ? Object.keys(self.$$syncDict).indexOf(k) : -1;
 
         if (keyExists > -1) {
             for (var key in value) {
                 if (Object.hasOwnProperty(key)) {
-                    console.log(key);self.$set(key, value[key])
+                    self.$set(key, value[key])
                 }
             }
         }
@@ -362,9 +424,6 @@ function vueRecordFetch(record) {
 function vueRecordFieldFetch(record, field) {
     var k = this._callingKey
     var ds = this.$ds
-    //var getList = this.$ds != null ? ds.getConnectionState() : 'WAIT'
-    //console.log('get list ', getList, ds.getConnectionState())
-    //if (getList !== 'WAIT') {
 
         var item = ds.record.getRecord(record);
         var self = this
@@ -374,7 +433,7 @@ function vueRecordFieldFetch(record, field) {
             var keyExists = Object.keys(self.$$syncDict).indexOf(k) > -1 ? Object.keys(self.$$syncDict).indexOf(k) : -1;
             if ((keyExists > -1) /*&& (self.$data[k])*/) {
                 self.$set(k, value)
-                console.log('[DS] EVENT: {SUBSCRIBE} FIELD ["' + field + '"]', 'IN RECORD (SINGLE ITEM): ', value)
+                0
             }
             ;
         });
@@ -389,7 +448,7 @@ function vueRecordFieldFetch(record, field) {
 
         this.$on('ds-sync', function (newVal, keySent) {
             if (k == keySent) {
-                console.log('[CONNECTOR] v-model change interecepted | Checking...', 'record[', record, '] field[', field, '] value[', newVal, ']')
+                0
                 var rec = ds.record.getRecord(record)
 
                 rec.whenReady(function () {
@@ -401,8 +460,7 @@ function vueRecordFieldFetch(record, field) {
         })//end this.$on
 
 
-  //  }
-    return data
+  return data
 }
 
 module.exports = {
@@ -410,6 +468,7 @@ module.exports = {
     vueRecordFieldFetch: vueRecordFieldFetch,
     vueRecordFetch: vueRecordFetch,
     vueListFetch: vueListFetch,
+    vueListFetchReadOnly: vueListFetchReadOnly,
     vueListDiscard: vueListDiscard,
     vdsLogin: vdsLogin,
     vdsLogout: vdsLogout,
